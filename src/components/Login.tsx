@@ -15,15 +15,17 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      // Call Tauri backend login command
-      await invoke('login', { username, password });
-      login(); // Update auth context on successful login
+      // Call Tauri backend login command and get user ID
+      const userId = await invoke<string>('login', { username, password });
+      localStorage.setItem('user_id', userId); // Store user ID in local storage
+      login(userId); // Pass userId to context
       toast.success('You are successfully logged in!');
       navigate('/welcome'); // Navigate to the welcome page
     } catch (error) {
       toast.error('Invalid username or password');
     }
   };
+  
 
   const handleSignup = async () => {
     try {
